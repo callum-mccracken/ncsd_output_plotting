@@ -24,3 +24,5 @@ You'll also enter those couple parameters here. Run `ncsd_output_plotter.py` whe
 - `tabula`, install with `pip install --user tabula-py`
 - `requests`, install with `pip install --user requests`
 - `lxml`, install with `pip install --user lxml`
+- `matplotlib`, install with `pip install --user matplotlib`
+
