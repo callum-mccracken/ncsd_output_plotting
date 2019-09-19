@@ -1,6 +1,6 @@
 # ncsd_output_plotting
 
-Python modules to make it easier to plot the output from ncsd-it.exe.
+Python modules to make it easier to plot the output from `ncsd-it.exe`.
 
 You give it an output file, a couple parameters (e.g. do you want to exclude Nmax=0?), and an output format (xmgrace by default) and it creates a plot / plot file.
 
