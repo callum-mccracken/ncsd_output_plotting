@@ -3,7 +3,7 @@ from sub_modules.ncsd_output_reader import read_ncsd_output
 from sub_modules.plotter import export_data
 
 # paths to file you want to take data from
-ncsd_out_filename = "/Users/callum/Desktop/rough_python/plotting/ncsd_output_files/B11_n3lo-NN3Nlnl-srg2.0_Nmax0-8.20_IT"
+ncsd_out_filename = "/Users/callum/Desktop/rough_python/ncsd_output_plotting/ncsd_output_files/B11_n3lo-NN3Nlnl-srg2.0_Nmax0-8.20_IT"
 
 skip_Nmax = [0]  # if there are any Nmax values you want to skip, put them here
 max_state = 8  # if you have 10 states and only want to plot 8, use this

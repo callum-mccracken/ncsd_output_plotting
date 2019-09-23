@@ -15,7 +15,7 @@ import tabula
 
 # a place to save all the pdfs we download, we'll overwrite for new files
 this_dir = split(realpath(__file__))[0]
-save_dir = realpath(join(this_dir, '../ncsd_output_files'))
+save_dir = realpath(join(this_dir, '..'))
 if not exists(save_dir):
     mkdir(save_dir)
 pdf_save_path = join(save_dir, 'TUNL.pdf')
@@ -23,12 +23,13 @@ pdf_save_path = join(save_dir, 'TUNL.pdf')
 
 def parse_tunl_pdf(pdf_url):
     """returns Ex column of pdf from TUNL, without uncertainties"""
-    print("The feature to grab data from TUNL is still very experimental,\n"+\
-        "please ensure you end up with the right values!\n\n"+\
-        "Also be sure to manually adjust J and T values.")
+    print("\nThe feature to grab data from TUNL is still very experimental,\n"+\
+        "please ensure you end up with the right values!\n"+\
+        "Also be sure to manually adjust J and T values.\n\n")
     print("downloading PDF")
     # saves url file to a local destination
     urllib.request.urlretrieve(pdf_url, pdf_save_path)
+    print("pdf saved as "+pdf_save_path)
     print("reading into dataframe")
     # read in the PDF file that contains data
     df = tabula.read_pdf(pdf_save_path, pages="all")
