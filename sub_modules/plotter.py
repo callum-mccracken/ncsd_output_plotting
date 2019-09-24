@@ -1,4 +1,5 @@
-import sub_modules.formats as f
+from .formats import xmgrace_Nmax_title_format, xmgrace_axis_label_line, \
+    xmgrace_data_line_format, xmgrace_dataset_format, xmgrace_format
 
 from os.path import realpath, join, split
 import numpy as np
@@ -56,19 +57,19 @@ def write_xmgrace(input_data):
     for Nmax in sorted(c_spectrum.keys()):
         if Nmax in input_data["skip_Nmax"]:
             continue
-        title = f.xmgrace_Nmax_title_format.format(Nmax=Nmax)
+        title = xmgrace_Nmax_title_format.format(Nmax=Nmax)
         lines = ""
         for state_num in sorted(c_spectrum[Nmax].keys()):
             if state_num > max_state:
                 continue            
-            lines += f.xmgrace_data_line_format.format(
+            lines += xmgrace_data_line_format.format(
                 Jx2=c_spectrum[Nmax][state_num][0],
                 Tx2=c_spectrum[Nmax][state_num][1],
                 parity=c_spectrum[Nmax][state_num][2],
                 energy=c_spectrum[Nmax][state_num][3])
-        data_string += f.xmgrace_dataset_format.format(
+        data_string += xmgrace_dataset_format.format(
             title=title, lines=lines)
-        axis_labels += f.xmgrace_axis_label_line.format(Nmax=Nmax)
+        axis_labels += xmgrace_axis_label_line.format(Nmax=Nmax)
     
     # experimental data, only 1 dataset
     title = "Expt"
@@ -76,12 +77,12 @@ def write_xmgrace(input_data):
     for state_num in sorted(e_spectrum[title].keys()):
         if state_num > max_state:
             continue
-        lines += f.xmgrace_data_line_format.format(
+        lines += xmgrace_data_line_format.format(
             Jx2=e_spectrum[title][state_num][0],
             Tx2=e_spectrum[title][state_num][1],
             parity=e_spectrum[title][state_num][2],
             energy=e_spectrum[title][state_num][3])
-    data_string += f.xmgrace_dataset_format.format(
+    data_string += xmgrace_dataset_format.format(
         title=title, lines=lines)
     axis_labels += "Expt"
     
@@ -100,7 +101,7 @@ def write_xmgrace(input_data):
     filename = filename[:filename.index("_Nmax")]+'_spectra_vs_Nmax.grdt'
     with open(join(save_dir, filename), "w+") as open_file:
         open_file.write(
-            f.xmgrace_format.format(
+            xmgrace_format.format(
                 num_spectra_plus_2 = num_spectra + 2,
                 num_states = num_states,
                 num_spectra = num_spectra,

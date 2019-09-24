@@ -4,7 +4,7 @@ Things I had to do to get this to work:
 -install python libraries
 """
 
-from sub_modules.ncsd_output_reader import element_name
+from .ncsd_output_reader import element_name
 from os import mkdir
 from os.path import join, realpath, split, exists
 
