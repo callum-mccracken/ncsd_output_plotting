@@ -11,6 +11,8 @@ lib64
 **.pyc
 **.pyo
 **/example_files*
+**/plot_files*
 **/ncsd_output_files*
-.DS_Store
+**.DS_Store
+**.json
 TUNL.pdf

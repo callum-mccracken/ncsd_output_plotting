@@ -1,4 +1,5 @@
-"""Holds big long strings to make writing files easier
+"""
+Holds big long strings to make writing files easier
 
 note: double curly braces tell Python you mean a literal curly brace
       when you're formatting a string.

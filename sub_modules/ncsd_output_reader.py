@@ -1,3 +1,9 @@
+"""
+-contains function which gets important data from ncsd output files
+
+- also contains a couple small functions for getting names of nuclei
+"""
+
 from os.path import split
 
 def element_name(Z):
@@ -38,8 +44,6 @@ def element_name(Z):
 def nucleus_name(Z, N):
     """returns the name of a nucleus in 'Li8' style"""
     return element_name(Z) + str(Z+N)
-
-
 
 def read_ncsd_output(filename):
     """

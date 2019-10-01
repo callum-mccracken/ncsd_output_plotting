@@ -1,10 +1,13 @@
+"""Contains functions to help plot (or otherwise export) data."""
+
+
 from .formats import xmgrace_Nmax_title_format, xmgrace_axis_label_line, \
     xmgrace_data_line_format, xmgrace_dataset_format, xmgrace_format
 
-from os.path import realpath, join, split
+from os.path import realpath, join, split, exists
+from os import mkdir
 import numpy as np
 import matplotlib.pyplot as plt
-
 
 """
     data must be of the form:
@@ -42,10 +45,15 @@ import matplotlib.pyplot as plt
         }
     }
 """
+
+# get some important paths sorted out
 this_dir = split(realpath(__file__))[0]
 save_dir = realpath(join(this_dir, "..", "plot_files"))
+if not exists(save_dir):
+    mkdir(save_dir)
 
 def write_xmgrace(input_data):
+    """creates a file which can be used by xmgrace"""
     # let's create the datasets and axis labels first
     c_spectrum = input_data["calculated_spectrum"]
     e_spectrum = input_data["expt_spectrum"]
@@ -116,8 +124,10 @@ def write_xmgrace(input_data):
 
 
 def write_csv(input_data):
+    """creates a csv file containing useful data, for easier parsing later"""
+    # write titles
     file_string = ",".join(
-        ["Title", "State", "Jx2", "Tx2", "Parity", "Energy"]) + "\n"
+        ["Title", "StateNum", "Jx2", "Tx2", "Parity", "Energy"]) + "\n"
     
     # let's create the datasets and axis labels first
     c_spectrum = input_data["calculated_spectrum"]
@@ -160,7 +170,10 @@ def write_csv(input_data):
     with open(join(save_dir, filename), "w+") as open_file:
         open_file.write(file_string)
 
+
 def matplotlib_plot(input_data):
+    """makes a matplotlib style plot of our data"""
+
     energy_datasets = []
     axis_labels = []
     
@@ -212,6 +225,7 @@ def matplotlib_plot(input_data):
     ax.set_xticklabels(axis_labels)
     
     # TODO: do something with the title / element name and line labels
+    # TODO: make this prettier in general
 
     for line in plot_arr:
         # pick a colour for the line
@@ -228,8 +242,10 @@ def matplotlib_plot(input_data):
                     c=colour, linestyle="dotted")
             # othewise we've reached the end of the list    
 
-    # display plot
-    plt.show()
+    # save
+    filename = split(input_data["filename"])[-1]
+    filename = filename[:filename.index("_Nmax")]+'_spectra_vs_Nmax.png'
+    plt.savefig(join(save_dir, filename))
 
 
 def export_data(data, out_type="xmgrace"):
