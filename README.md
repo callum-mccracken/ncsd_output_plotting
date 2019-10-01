@@ -18,11 +18,13 @@ You'll also enter those couple parameters here. Run `ncsd_output_plotter.py` whe
 
 1. Python (3.7.4 ideally, other versions may work)
 2. NCSD output files
-3. an internet connection to download data from TUNL
-4. a Java SDK, if you type `java` on the terminal and get sensible output, you probably have it
-5. A few python libraries:
-- `tabula`, install with `pip install --user tabula-py`
-- `requests`, install with `pip install --user requests`
-- `lxml`, install with `pip install --user lxml`
-- `matplotlib`, install with `pip install --user matplotlib`
+3. If you want to get data from TUNL:
+  - an internet connection
+  - a Java SDK
+    - if you type `java` in the terminal and get sensible output, you probably have it
+  - A few python libraries:
+    - `tabula`, install with `pip install --user tabula-py`
+    - `requests`, install with `pip install --user requests`
+    - `lxml`, install with `pip install --user lxml`
+    - `matplotlib`, install with `pip install --user matplotlib`
 
