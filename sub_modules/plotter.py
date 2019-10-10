@@ -5,12 +5,13 @@ from .formats import xmgrace_Nmax_title_format, xmgrace_axis_label_line, \
     xmgrace_data_line_format, xmgrace_dataset_format, xmgrace_format
 
 from os.path import realpath, join, split, exists
-from os import mkdir
+from os import mkdir, system
 import numpy as np
 import matplotlib.pyplot as plt
 
-"""
-    data must be of the form:
+
+
+"""data must be of the form:
     data = {
         "skip_Nmax" = [],
         "max_state" = 10,
@@ -52,6 +53,7 @@ save_dir = realpath(join(this_dir, "..", "plot_files"))
 if not exists(save_dir):
     mkdir(save_dir)
 
+grace_plotter_path = realpath(join(save_dir, "grace_spectra_plotter.exe"))
 def write_xmgrace(input_data):
     """creates a file which can be used by xmgrace"""
     # let's create the datasets and axis labels first
@@ -69,7 +71,7 @@ def write_xmgrace(input_data):
         lines = ""
         for state_num in sorted(c_spectrum[Nmax].keys()):
             if state_num > max_state:
-                continue            
+                continue
             lines += xmgrace_data_line_format.format(
                 Jx2=c_spectrum[Nmax][state_num][0],
                 Tx2=c_spectrum[Nmax][state_num][1],
@@ -92,7 +94,7 @@ def write_xmgrace(input_data):
             energy=e_spectrum[title][state_num][3])
     data_string += xmgrace_dataset_format.format(
         title=title, lines=lines)
-    axis_labels += "Expt"
+    axis_labels += title
     
     # now a couple final things
     num_spectra = len(c_spectrum.keys()) + len(e_spectrum.keys())
@@ -107,7 +109,8 @@ def write_xmgrace(input_data):
     # then save
     filename = split(input_data["filename"])[-1]
     filename = filename[:filename.index("_Nmax")]+'_spectra_vs_Nmax.grdt'
-    with open(join(save_dir, filename), "w+") as open_file:
+    save_path = join(save_dir, filename)
+    with open(save_path, "w+") as open_file:
         open_file.write(
             xmgrace_format.format(
                 num_spectra_plus_2 = num_spectra + 2,
@@ -121,7 +124,13 @@ def write_xmgrace(input_data):
                 data = data_string
             )
         )
-
+    # now call the grace_spectra_plotter.exe file
+    system(grace_plotter_path + " " + save_path + " -excited")
+    # and actually use xmgrace to plot
+    agr_path = save_path[:save_path.index(".grdt")] + ".agr"
+    system("xmgrace " + agr_path)
+    print("If that xmgrace call failed, try it again by pasting this:")
+    print("xmgrace " + agr_path)
 
 def write_csv(input_data):
     """creates a csv file containing useful data, for easier parsing later"""

@@ -11,7 +11,10 @@ lib64
 **.pyc
 **.pyo
 **/example_files*
-**/plot_files*
+**.csv
+**.png
+**.grdt
+**.agr
 **/ncsd_output_files*
 **.DS_Store
 **.json

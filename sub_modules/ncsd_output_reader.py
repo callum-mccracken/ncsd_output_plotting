@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 -contains function which gets important data from ncsd output files
 
@@ -6,44 +7,22 @@
 
 from os.path import split
 
+
 def element_name(Z):
     element_names = {
-        1: "H",
-        2: "He",
-        3: "Li",
-        4: "Be",
-        5: "B",
-        6: "C",
-        7: "N",
-        8: "O",
-        9: "F",
-        10: "Ne",
-        11: "Na",
-        12: "Mg",
-        13: "Al",
-        14: "Si",
-        15: "P",
-        16: "S",
-        17: "Cl",
-        18: "Ar",
-        19: "K",
-        20: "Ca",
-        21: "Sc",
-        22: "Ti",
-        23: "V",
-        24: "Cr",
-        25: "Mn",
-        26: "Fe",
-        27: "Co",
-        28: "Ni",
-        29: "Cu",
+        1: "H", 2: "He", 3: "Li", 4: "Be", 5: "B", 6: "C", 7: "N", 8: "O",
+        9: "F", 10: "Ne", 11: "Na", 12: "Mg", 13: "Al", 14: "Si", 15: "P",
+        16: "S", 17: "Cl", 18: "Ar", 19: "K", 20: "Ca", 21: "Sc", 22: "Ti",
+        23: "V", 24: "Cr", 25: "Mn", 26: "Fe", 27: "Co", 28: "Ni", 29: "Cu",
         30: "Zn"
     }   # that's probably all we need, right? Hope so anyway
     return element_names[Z]
 
+
 def nucleus_name(Z, N):
     """returns the name of a nucleus in 'Li8' style"""
     return element_name(Z) + str(Z+N)
+
 
 def read_ncsd_output(filename):
     """
@@ -58,7 +37,7 @@ def read_ncsd_output(filename):
         "n_states": 10,
         "filename": "filename",
         "interaction_name": "n3lo-NN3Nlnl-srg2.0"
-        "spectrum": {
+        "calculated_spectrum": {
             Nmax: {
                 state_num: [
                     J(angular momentum),
@@ -66,13 +45,11 @@ def read_ncsd_output(filename):
                     Parity,
                     Energy
                 ],
-                ...
             }
-            ...
         }
     }
     """
-    
+    print("reading data from NCSD output")
     # read file data
     with open(filename, "r+") as ncsd_output:
         lines = ncsd_output.readlines()
@@ -132,6 +109,7 @@ def read_ncsd_output(filename):
                 isospin = round(float(words[11]) * 2)  # x2 so it's an int                
             except ValueError:
                 # for states >= 10, it's written as #10 not # 9
+                # I assume we never need to deal with states >=100
                 state_num = int(words[1][1:])
                 energy = float(words[4])
                 angular_momentum = round(float(words[7]) * 2)  # x2 so it's an int
@@ -139,8 +117,26 @@ def read_ncsd_output(filename):
             # write down energy relative to state zero energy
             if state_num == 1: # I assume the first state must have already come
                 state_1_energy = energy
-            energy = energy - state_1_energy    
+            # make all energies relative
+            energy = energy - state_1_energy
             data_dict["calculated_spectrum"][Nmax][state_num] = [
                 angular_momentum, isospin, parity, energy]
-
     return data_dict
+
+
+def read_all_ncsd_output(real_paths):
+    """runs read_ncsd_output for many paths, tries to merge data"""
+    # get data from first file
+    overall_data = read_ncsd_output(real_paths[0])
+
+    for path in real_paths[1:]:
+        new_data = read_ncsd_output(path)
+        # check if okay to merge
+        for attr in ["Z", "N", "n_states", "interaction_name"]:
+            if new_data[attr] != overall_data[attr]:
+                raise ValueError("Data from two files don't match!")
+        # merge
+        spec = "calculated_spectrum"
+        for key in new_data[spec].keys():
+            overall_data[spec][key] = new_data[spec][key]
+    return overall_data
